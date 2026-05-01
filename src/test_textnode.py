@@ -14,6 +14,7 @@ from textnode import (
     BlockType,
     block_to_block_type,
     markdown_to_html_node,
+    extract_title,
 )
 
 
@@ -442,5 +443,23 @@ This is another paragraph with _italic_ text and `code` here
     def test_codeblock(self):
         md = """
 """
+
+    def test_extract_title(self):
+        markdown = "# Hello"
+        self.assertEqual(extract_title(markdown), "Hello")
+
+    def test_extract_title_strips_whitespace(self):
+        markdown = "#   Hello World   "
+        self.assertEqual(extract_title(markdown), "Hello World")
+
+    def test_extract_title_ignores_h2(self):
+        markdown = "## Not the title\n# Real Title"
+        self.assertEqual(extract_title(markdown), "Real Title")
+
+    def test_extract_title_raises_when_missing(self):
+        markdown = "## No h1 here"
+        with self.assertRaises(Exception):
+            extract_title(markdown)
+
 if __name__ == "__main__":
     unittest.main()
