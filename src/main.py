@@ -1,6 +1,8 @@
 import os
 import shutil
+import sys
 from textnode import generate_pages_recursive
+
 
 def copy_static_to_public(source_dir, dest_dir):
     if os.path.exists(dest_dir):
@@ -24,8 +26,12 @@ def copy_recursive(source_dir, dest_dir):
 
 
 def main():
-    copy_static_to_public("static", "public")
-    generate_pages_recursive("content", "template.html", "public")
+    basepath = "/"
+    if len(sys.argv) > 1:
+        basepath = sys.argv[1]
+
+    copy_static_to_public("static", "docs")
+    generate_pages_recursive("content", "template.html", "docs", basepath)
 
 
 if __name__ == "__main__":
